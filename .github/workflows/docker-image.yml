@@ -44,9 +44,9 @@ jobs:
           file: Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/api-kinhdoanh
-          # cache-from: type=local, src=/tmp/.buildx-cache 
-          # cache-to: type=local, src=/tmp/.buildx-cache
+          tags: ${{ secrets.DOCKER_USERNAME }}/api-mizuhovn
+          cache-from: type=local, src=/tmp/.buildx-cache 
+          cache-to: type=local, src=/tmp/.buildx-cache
           
           
       - name: Verify
