@@ -1,0 +1,19 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "4001:4001"
+    environment:
+      - MONGODB_URL=mongodb+srv://thanhtrung:thanhtrung@cluster0.ftc5eii.mongodb.net/chordams?retryWrites=true&w=majority
+      - MONGODB_USER=thanhtrung
+      - MONGODB_PASSWORD=thanhtrung
+    links:
+      - db
+  db:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=thanhtrung
+      - MONGO_INITDB_ROOT_PASSWORD=thanhtrung
+    ports:
+      - "27017:27017"
