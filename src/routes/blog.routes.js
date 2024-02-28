@@ -6,6 +6,7 @@ const router = express.Router();
 //Admin và nhân viên
 router.post('/create', upload.Image('images'), blogController.createBlogs);
 router.get('/', blogController.getAllBlogs)
+router.get('/get-all', blogController.getAll)
 router.get('/detail', blogController.getBlog)
 router.get('/search', blogController.getBlogs)
 

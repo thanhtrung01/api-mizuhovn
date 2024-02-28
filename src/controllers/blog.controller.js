@@ -41,7 +41,7 @@ const createBlogs = async (req, res) => {
         errMessage: "Không có dữ liệu để tạo mới.",
       });
     }
-    if (createData.content=='<p><br></p>'||createData.content==null){
+    if (createData.content == '<p><br></p>' || createData.content == null) {
       return res.status(400).json({
         ok: false,
         errMessage: "Vui lòng nhập nội dung.",
@@ -55,6 +55,50 @@ const createBlogs = async (req, res) => {
     return res.status(404).json({ error: error });
   }
 };
+const getAll = async (req, res) => {
+  try {
+    const categoryProductList = await CategorySchema.aggregate([
+      {
+        $lookup: {
+          from: "category1",
+          localField: "_id",
+          foreignField: "category",
+          as: "category1List",
+        },
+      },
+      {
+        $unwind: "$category1List",
+      },
+      {
+        $lookup: {
+          from: "blogs",
+          localField: "category1List._id",
+          foreignField: "category1",
+          as: "category1List.blogs",
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          category: { $first: "$category" },
+          category1List: { $push: "$category1List" },
+        },
+      },
+      {
+        $sort: {
+          "_id": 1,
+        },
+      },
+    ]);
+    return res.status(200).json(categoryProductList);
+  } catch (error) {
+    return res.status(404).json({ error: error });
+  }
+};
+
+
+
+
 
 const getAllBlogs = async (req, res) => {
   try {
@@ -194,6 +238,7 @@ const updateBlogs = async (req, res) => {
 module.exports = {
   getBlogs,
   getBlog,
+  getAll,
   getBlogsId,
   createBlogs,
   deleteBlogs,
