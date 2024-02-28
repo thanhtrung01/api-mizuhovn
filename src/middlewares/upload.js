@@ -11,8 +11,8 @@ cloudiness.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudiness,
   params: {
-    folder: 'api-mizuhogroup',
-    // allowed_formats: ['png', 'jpeg', 'jpg', 'gif', 'jpeg'],
+    folder: 'api-mizuhovn',
+    allowed_formats: ['png', 'jpeg', 'jpg', 'gif', 'jpeg'],
   },
 });
 

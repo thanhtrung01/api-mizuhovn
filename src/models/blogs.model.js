@@ -8,6 +8,10 @@ const BlogsSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'category',
   },
+  category1: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'category1',
+  },
   slug:{
     type: String
   },

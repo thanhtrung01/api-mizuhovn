@@ -1,14 +1,18 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const CategorySchema = mongoose.Schema({
-  category:{
+  category1:{
     type: String,
   },
-  slugCategory:{
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'category',
+  },
+  slugCategory1:{
     type: String
   },
 },
 { timestamps: true });
 
 
-module.exports = mongoose.model("category", CategorySchema);
+module.exports = mongoose.model("category1", CategorySchema);

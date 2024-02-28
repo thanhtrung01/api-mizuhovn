@@ -1,11 +1,11 @@
 const BlogsSchema = require("../models/blogs.model");
 const CategorySchema = require("../models/category.models");
+const CategorySchema1 = require("../models/category1.models");
 const UserSchema = require("../models/user.model");
 const { v4: uuidv4 } = require("uuid");
 const slugify = require("slugify");
 const createBlogs = async (req, res) => {
   try {
-    const user = await UserSchema.findOne({ _id: req.user.id });
     let createData = {};
     if (req.body.title) {
       createData.title = req.body.title;
@@ -16,10 +16,18 @@ const createBlogs = async (req, res) => {
       createData.slug = slug;
     }
     if (req.body.category) {
-      createData.category = req.body.category;
+      let existingCategory = await CategorySchema.findOne({ category: req.body.category });
+      if (!existingCategory) {
+        res.status(404).json({ error: 'Không tìm thấy danh mục' })
+      }
+      createData.category = existingCategory._id;
     }
-    if (user) {
-      createData.author = user.name;
+    if (req.body.category1) {
+      let existingCategory1 = await CategorySchema1.findOne({ category1: req.body.category1 });
+      if (!existingCategory1) {
+        res.status(404).json({ error: 'Không tìm thấy danh mục' })
+      }
+      createData.category1 = existingCategory1._id;
     }
     if (req.body.content) {
       createData.content = req.body.content;
@@ -68,7 +76,7 @@ const getAllBlogs = async (req, res) => {
     } else {
       query = {};
     }
-    const blogs = await BlogsSchema.find(query).populate('category').sort({ createdAt: -1 });
+    const blogs = await BlogsSchema.find(query).populate('category').populate('category1').sort({ createdAt: -1 });
     // .skip(skip)
     // .limit(itemsPerPage);
     return res.status(200).json({ blogs });
@@ -142,22 +150,18 @@ const updateBlogs = async (req, res) => {
     const { blogsId } = req.params;
     let updatedData = {};
     console.log(req.body)
-    if (req.body.category) {
-      updatedData.category = req.body.category;
-    }
-    if (req.body.author) {
-      updatedData.author = req.body.author;
-    }
     if (req.body.content) {
       updatedData.content = req.body.content;
     }
+    if (req.body.category1) {
+      let existingCategory1 = await CategorySchema1.findOne({ category1: req.body.category1 });
+      if (!existingCategory1) {
+        res.status(404).json({ error: 'Không tìm thấy danh mục' })
+      }
+      updatedData.category1 = existingCategory1._id;
+    }
     if (req.body.title) {
       updatedData.title = req.body.title;
-      const cleanedTitle = req.body.title.replace(/:/g, '');
-      const slugs = slugify(cleanedTitle, { lower: true });
-      const randomPart = uuidv4();
-      const slug = `${slugs}-${randomPart}`;
-      updatedData.slug = slug;
     }
     if (req.files && req.files[0] && req.files[0].path) {
       updatedData.images = req.files[0].path;
@@ -178,11 +182,6 @@ const updateBlogs = async (req, res) => {
         errMessage: "Không tìm thấy người dùng.",
       });
     }
-
-    // user.isAdmin = undefined;
-    // user.isStaff = undefined;
-    // user.password = undefined;
-    // user.__v = undefined;
     await user.save();
     res.status(200).json({
       ok: true,

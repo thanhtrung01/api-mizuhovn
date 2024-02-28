@@ -47,12 +47,13 @@ app.use(
 );
 app.use("/api/v1/auth", require("./src/routes/auth.routes"));
 app.use("/api/v1/category", require("./src/routes/category.routes"))
+app.use("/api/v1/category-1", require("./src/routes/category1.routes"))
 app.use("/api/v1/user", require("./src/routes/user.routes"));
 app.use("/api/v1/customer", require("./src/routes/customer.routes"));
 app.use("/api/v1/blog", require("./src/routes/blog.routes"));
 
 app.get("/", (req, res) => {
-  res.json({ msg: "Welcome to my API shopping" });
+  res.json({ msg: "Welcome to my API" });
 });
 
 module.exports = app;
