@@ -63,25 +63,25 @@ const getAll = async (req, res) => {
           from: "category1",
           localField: "_id",
           foreignField: "category",
-          as: "category1List",
+          as: "submenu",
         },
       },
       {
-        $unwind: "$category1List",
+        $unwind: "$submenu",
       },
       {
         $lookup: {
           from: "blogs",
-          localField: "category1List._id",
+          localField: "submenu._id",
           foreignField: "category1",
-          as: "category1List.blogs",
+          as: "submenu.blogs",
         },
       },
       {
         $group: {
           _id: "$_id",
           category: { $first: "$category" },
-          category1List: { $push: "$category1List" },
+          submenu: { $push: "$submenu" },
         },
       },
       {
