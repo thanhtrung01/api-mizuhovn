@@ -74,7 +74,7 @@ const getAll = async (req, res) => {
           from: "blogs",
           localField: "submenu._id",
           foreignField: "category1",
-          as: "submenu.blogs",
+          as: "submenu.submenu",
         },
       },
       {
